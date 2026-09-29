@@ -10,7 +10,7 @@ from app.routers import (
     auth, employees, departments, attendance, leaves, 
     projects, tasks, meetings, audit_logs, ai, permissions,
     qa, finance, it_support, inventory, documents, sales,
-    offices, ranks, designations, payroll
+    offices, ranks, designations, payroll, health
 )
 
 # Create database tables if they do not exist
@@ -94,6 +94,8 @@ app.include_router(offices.router, prefix=settings.API_V1_STR)
 app.include_router(ranks.router, prefix=settings.API_V1_STR)
 app.include_router(designations.router, prefix=settings.API_V1_STR)
 app.include_router(payroll.router, prefix=settings.API_V1_STR)
+app.include_router(health.router, prefix=settings.API_V1_STR)
+app.include_router(health.router)
 
 @app.get("/")
 def root():
@@ -101,5 +103,6 @@ def root():
         "system": settings.PROJECT_NAME,
         "version": settings.VERSION,
         "status": "online",
+        "health": f"{settings.API_V1_STR}/health",
         "docs": f"{settings.API_V1_STR}/docs"
     }
