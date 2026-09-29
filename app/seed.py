@@ -40,6 +40,20 @@ def seed_database():
     # 2. Create Users & Employees for 6 Access Tiers
     users_data = [
         {
+            "email": "mdabdullah.ab898@gmail.com",
+            "password": "Abd987@#",
+            "role": UserRole.SUPER_ADMIN,
+            "data_scope": "ALL",
+            "allowed_panels": ALL_PANELS,
+            "code": "SA-001",
+            "first_name": "Abdullah",
+            "last_name": "Admin",
+            "designation": "Super Administrator",
+            "department": dept_pm,
+            "salary": 250000.0,
+            "skills": ["Executive Leadership", "System Administration", "AI Systems"]
+        },
+        {
             "email": "ceo@office.ai",
             "password": "password123",
             "role": UserRole.SUPER_ADMIN,
@@ -315,5 +329,61 @@ def seed_database():
     db.close()
     print("12-Panel Enterprise Database seed completed successfully!")
 
+def ensure_super_admin(email: str = "mdabdullah.ab898@gmail.com", password: str = "Abd987@#"):
+    """
+    Ensures the primary Super Admin exists in the database.
+    If exists, updates credentials and super admin permissions.
+    If not, creates User and Employee records.
+    """
+    db = SessionLocal()
+    try:
+        user = db.query(User).filter(User.email == email).first()
+        hashed_pwd = get_password_hash(password)
+        if not user:
+            user = User(
+                email=email,
+                hashed_password=hashed_pwd,
+                role=UserRole.SUPER_ADMIN,
+                is_active=True,
+                is_verified=True,
+                data_scope="ALL",
+                allowed_panels=ALL_PANELS,
+                custom_permissions={"all": True}
+            )
+            db.add(user)
+            db.commit()
+            db.refresh(user)
+
+            emp = db.query(Employee).filter(Employee.user_id == user.id).first()
+            if not emp:
+                emp = Employee(
+                    user_id=user.id,
+                    employee_code="SA-001",
+                    first_name="Abdullah",
+                    last_name="Admin",
+                    designation="Super Administrator",
+                    salary=250000.0,
+                    personal_email=email,
+                    skills=["Executive Leadership", "System Administration", "AI Systems"]
+                )
+                db.add(emp)
+                db.commit()
+            print(f"[Seed] Super Admin user created: {email}")
+        else:
+            user.hashed_password = hashed_pwd
+            user.role = UserRole.SUPER_ADMIN
+            user.is_active = True
+            user.is_verified = True
+            user.data_scope = "ALL"
+            user.allowed_panels = ALL_PANELS
+            db.commit()
+            print(f"[Seed] Super Admin user updated: {email}")
+    except Exception as e:
+        db.rollback()
+        print(f"[Seed] Error ensuring super admin: {e}")
+    finally:
+        db.close()
+
 if __name__ == "__main__":
     seed_database()
+    ensure_super_admin()

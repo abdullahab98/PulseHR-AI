@@ -52,10 +52,12 @@ def _run_sqlite_migrations():
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    # Initialize database tables on startup safely
+    # Initialize database tables and super admin on startup safely
     try:
         Base.metadata.create_all(bind=engine)
         _run_sqlite_migrations()
+        from app.seed import ensure_super_admin
+        ensure_super_admin()
     except Exception as e:
         print(f"[Startup DB Warning] {e}")
     yield
