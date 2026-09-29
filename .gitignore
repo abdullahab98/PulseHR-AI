@@ -1,0 +1,24 @@
+# Virtual environment
+venv/
+env/
+.venv/
+
+# Environment variables (Secrets & Credentials)
+.env
+.env.*
+
+# Python Cache & Bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+
+# Databases
+*.db
+*.sqlite3
+app.db
+office_management.db
+
+# Pip installer scripts / logs
+get-pip.py
+*.log
