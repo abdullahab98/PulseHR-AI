@@ -23,4 +23,4 @@ uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 * **Swagger Docs:** [http://localhost:8000/api/v1/docs](http://localhost:8000/api/v1/docs)
 * **API Root:** [http://localhost:8000/](http://localhost:8000/)
-Live Link: pulse-hr-ai.vercel.app
+* **Live Link:** [pulse-hr-ai.vercel.app](https://pulse-hr-ai.vercel.app/)
