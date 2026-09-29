@@ -10,7 +10,7 @@ class Settings(BaseSettings):
     API_V1_STR: str = "/api/v1"
     
     # Security
-    SECRET_KEY: str = "SUPER_SECRET_KEY_ENTERPRISE_OFFICE_MGMT_2026_AI_SYSTEM"
+    SECRET_KEY: str
     ALGORITHM: str = "HS256"
     ACCESS_TOKEN_EXPIRE_MINUTES: int = 60 * 24 * 7  # 7 days token
     
@@ -18,11 +18,11 @@ class Settings(BaseSettings):
     DATABASE_URL: str = "sqlite:///./office_management.db"
     
     # MongoDB Database
-    MONGODB_URL: str = "mongodb+srv://test-database:Abd987@testing-database.zkgz4.mongodb.net/?retryWrites=true&w=majority&appName=testing-database"
+    MONGODB_URL: str
     MONGODB_DB_NAME: str = "office_management"
     
     # AI Engine Integration
-    GEMINI_API_KEY: str = ""
+    GEMINI_API_KEY: str
     
     # Timezone Configuration (Bangladesh Standard Time: UTC+6)
     TIMEZONE: str = "Asia/Dhaka"
