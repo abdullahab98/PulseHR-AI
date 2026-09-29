@@ -13,8 +13,7 @@ from app.routers import (
     offices, ranks, designations, payroll, health
 )
 
-# Create database tables if they do not exist
-Base.metadata.create_all(bind=engine)
+from contextlib import asynccontextmanager
 
 # --- SQLite column migration (handles existing DBs missing new columns) ---
 def _run_sqlite_migrations():
@@ -51,14 +50,22 @@ def _run_sqlite_migrations():
     except Exception as e:
         print(f"[Migration] Warning: {e}")
 
-_run_sqlite_migrations()
-
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    # Initialize database tables on startup safely
+    try:
+        Base.metadata.create_all(bind=engine)
+        _run_sqlite_migrations()
+    except Exception as e:
+        print(f"[Startup DB Warning] {e}")
+    yield
 
 app = FastAPI(
     title=settings.PROJECT_NAME,
     version=settings.VERSION,
     openapi_url=f"{settings.API_V1_STR}/openapi.json",
-    docs_url=f"{settings.API_V1_STR}/docs"
+    docs_url=f"{settings.API_V1_STR}/docs",
+    lifespan=lifespan
 )
 
 # Enable CORS for Angular frontend
